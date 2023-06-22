@@ -11,6 +11,7 @@ struct MenuItem: Decodable, Identifiable {
     let id = UUID()
     
     let title: String
+    let description: String
     let image: String
     let price: String
 }

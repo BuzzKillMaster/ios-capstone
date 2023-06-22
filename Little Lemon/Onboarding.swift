@@ -25,14 +25,14 @@ struct Onboarding: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(alignment: .center, spacing: 20) {
                 NavigationLink(destination: Home(), isActive: $isLoggedIn) {
                     EmptyView()
                 }
                 
-                TextField("First Name", text: $firstName)
-                TextField("Last Name", text: $lastName)
-                TextField("Email", text: $email)
+                CustomTextField(placeholder: "First Name", text: $firstName)
+                CustomTextField(placeholder: "Last Name", text: $lastName)
+                CustomTextField(placeholder: "Email", text: $email)
                 
                 Button("Register") {
                     if firstName.isEmpty {
@@ -59,7 +59,13 @@ struct Onboarding: View {
                         displayError = true
                     }
                 }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color("Primary"))
+                .cornerRadius(5.0)
+                .foregroundColor(.white)
             }
+            .padding()
             .onAppear {
                 if UserDefaults.standard.bool(forKey: kIsLoggedIn) {
                     isLoggedIn = true
@@ -76,6 +82,18 @@ struct Onboarding: View {
         let predicate = NSPredicate(format: "SELF MATCHES %@", validator)
         
         return predicate.evaluate(with: email)
+    }
+}
+
+struct CustomTextField: View {
+    var placeholder: String
+    @Binding var text: String
+    
+    var body: some View {
+        TextField(placeholder, text: $text)
+            .padding()
+            .background(.gray.opacity(0.05))
+            .cornerRadius(5.0)
     }
 }
 

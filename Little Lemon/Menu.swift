@@ -14,11 +14,22 @@ struct Menu: View {
     
     var body: some View {
         VStack {
-            Text("Little Lemon")
-            Text("Chicago")
-            Text("The Litle Lemon app enables you to quickly and easily order from our wide range of authentic mediterranean cuisine.")
-            
-            TextField("Search menu", text: $searchText)
+            VStack(alignment: .leading, spacing: 15) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Little Lemon").font(.title).foregroundColor(Color("Secondary"))
+                        Text("Chicago").font(.headline)
+                        Text("The Litle Lemon app enables you to quickly and easily order from our wide range of authentic mediterranean cuisine.")
+                    }
+                    Image("HeroBanner").resizable().aspectRatio(contentMode: .fill).frame(width: 100, height: 100).cornerRadius(5)
+                }
+                
+                TextField("Search menu", text: $searchText)
+                    .padding()
+                    .background(.white)
+                    .foregroundColor(.gray)
+                    .cornerRadius(5)
+            }.padding().background(Color("Primary")).foregroundColor(.white)
             
             FetchedObjects(
                 predicate: buildPredicate(),
@@ -27,19 +38,24 @@ struct Menu: View {
                 List {
                     ForEach(dishes, id: \.id) { dish in
                         HStack {
-                            Text(dish.title! + ": $" + dish.price!)
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text(dish.title!).font(.headline)
+                                Text(dish.details!)
+                                Text("$" + dish.price!).font(.headline)
+                            }
                             
                             Spacer()
                             
                             AsyncImage(url: URL(string: dish.image!)) { image in
-                                image.resizable()
+                                image.resizable().cornerRadius(5)
                             } placeholder: {
                                 ProgressView()
                             }
                             .frame(width: 100, height: 100)
-                        }
+                        }.padding(.vertical)
                     }
                 }
+                .listStyle(.plain)
             }
         }
         .onAppear(perform: getMenuData)
@@ -62,6 +78,7 @@ struct Menu: View {
                     for item in menu {
                         let dish = Dish(context: viewContext)
                         dish.title = item.title
+                        dish.details = item.description
                         dish.image = item.image
                         dish.price = item.price
                     }
